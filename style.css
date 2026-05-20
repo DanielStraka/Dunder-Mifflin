@@ -628,3 +628,216 @@ select{
         margin-top: 10px;
     }
 }
+
+/* ===== Dark mode toggle ===== */
+#darkToggle {
+    position: fixed;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1000;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    line-height: 1;
+}
+#darkToggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Active nav link ===== */
+header a.active {
+    background-color: white !important;
+    color: black !important;
+    border-radius: 15px;
+}
+
+/* ===== Record counter badge ===== */
+.record-count {
+    font-size: 0.4em;
+    font-weight: normal;
+    color: #888;
+    margin-left: 10px;
+    vertical-align: middle;
+    background: #f0f0f0;
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+/* ===== No results message ===== */
+#noResults {
+    display: none;
+    padding: 24px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    font-size: 1.1em;
+    grid-column: 2;
+}
+@media only screen and (max-width: 700px) {
+    #noResults { grid-column: 1; }
+}
+
+/* ===== Toast notification ===== */
+#toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #222;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 15px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s, transform 0.35s;
+    white-space: nowrap;
+}
+#toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ===== Sortable column headers ===== */
+thead th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+}
+thead th[data-sort]:hover {
+    background-color: #333 !important;
+}
+.sort-icon {
+    font-size: 0.75em;
+    display: inline-block;
+    width: 1.2em;
+}
+
+/* ===== Chart container ===== */
+.chart-container {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #ccc;
+}
+.chart-container h2 {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* ===========================
+   DARK MODE  (html.dark)
+   =========================== */
+html.dark body {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+html.dark header {
+    background-color: #0d0d1a;
+}
+html.dark header a {
+    color: #ddd;
+}
+html.dark header a.active,
+html.dark header a:hover {
+    background-color: #ddd !important;
+    color: #0d0d1a !important;
+}
+html.dark #darkToggle {
+    border-color: rgba(255, 255, 255, 0.35);
+}
+html.dark th {
+    background-color: #16213e;
+    border-color: #2d3a5e;
+    color: #ddd;
+}
+html.dark thead th[data-sort]:hover {
+    background-color: #1e2d50 !important;
+}
+html.dark td {
+    color: #bbb;
+    border-bottom-color: #2d3a5e;
+}
+html.dark .DetailForm,
+html.dark .DetailStats {
+    background-color: #16213e;
+    border-color: #2d3a5e;
+    color: #e0e0e0;
+}
+html.dark input[type="text"],
+html.dark input[type="number"],
+html.dark input[type="date"],
+html.dark input[type="email"],
+html.dark .inputsearch,
+html.dark select {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    border-color: #2d3a5e;
+}
+html.dark .search,
+html.dark .formbutton {
+    background-color: #16213e;
+    color: #ddd;
+}
+html.dark .formbutton:hover {
+    background-color: #ddd;
+    color: #1a1a2e;
+}
+html.dark .button {
+    color: #ddd;
+}
+html.dark .button:hover {
+    background-color: #ddd;
+    color: #1a1a2e;
+}
+html.dark h1,
+html.dark .h11 {
+    border-color: #2d3a5e;
+    color: #e0e0e0;
+}
+html.dark .record-count {
+    background: #2d3a5e;
+    color: #aaa;
+}
+html.dark #noResults {
+    color: #999;
+}
+html.dark .chart-container {
+    border-top-color: #2d3a5e;
+}
+html.dark .chart-container h2 {
+    color: #ddd;
+}
+html.dark #toast {
+    background: #16213e;
+    border: 1px solid #2d3a5e;
+}
+html.dark .exitbutton {
+    color: #ff7777;
+}
+html.dark .detail {
+    color: #4da6ff;
+}
+html.dark .delete {
+    color: #ff7777;
+}
+html.dark .CountPrice,
+html.dark .bestemp {
+    color: #e0e0e0;
+}
+html.dark fieldset {
+    border-color: #2d3a5e;
+    color: #ddd;
+}
+html.dark legend {
+    color: #ddd;
+}

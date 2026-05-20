@@ -1,90 +1,91 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Prodeje — Dunder Mifflin</title>
+    <script>if(localStorage.getItem('darkMode')==='1')document.documentElement.classList.add('dark');</script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php 
+<?php
     require 'db.php';
 
+    $search = $_GET['search'] ?? '';
 
-    if(isset($_GET['search']))
-        $search = $_GET['search'];
-
-    
-
-    if(!empty($search)){
-        $stmt = $pdo->prepare('SELECT * FROM Sales s inner join Products p on p.id = s.idProduct inner join employees e on e.id = s.idEmployee
-        WHERE  p.ProductName LIKE "%" :ProductName "%" 
-        OR e.Name LIKE "%" :Name "%"
-        OR e.Surname LIKE "%" :Surname "%"
-        OR s.Date LIKE "%" :Date "%"
-        ');
-
-    $stmt->execute(['ProductName' => $search, 'Name' => $search, 'Surname' => $search, 'Date' => $search]);
-    }else{
-        $stmt = $pdo->prepare('SELECT s.id,s.idEmployee,s.idProduct,s.Quantity,s.FinalPrice,s.Date,s.Sale,p.ProductName,e.Name,e.Surname,p.Price FROM Sales s inner join Products p on p.id = s.idProduct inner join employees e on e.id = s.idEmployee order by s.id');
+    if (!empty($search)) {
+        $stmt = $pdo->prepare('SELECT s.id,s.idEmployee,s.idProduct,s.Quantity,s.FinalPrice,s.Date,s.Sale,p.ProductName,e.Name,e.Surname,p.Price
+            FROM Sales s
+            INNER JOIN Products p ON p.id = s.idProduct
+            INNER JOIN employees e ON e.id = s.idEmployee
+            WHERE p.ProductName LIKE :q
+               OR e.Name LIKE :q
+               OR e.Surname LIKE :q
+               OR s.Date LIKE :q
+            ORDER BY s.id');
+        $stmt->execute(['q' => '%' . $search . '%']);
+    } else {
+        $stmt = $pdo->prepare('SELECT s.id,s.idEmployee,s.idProduct,s.Quantity,s.FinalPrice,s.Date,s.Sale,p.ProductName,e.Name,e.Surname,p.Price
+            FROM Sales s
+            INNER JOIN Products p ON p.id = s.idProduct
+            INNER JOIN employees e ON e.id = s.idEmployee
+            ORDER BY s.id');
         $stmt->execute();
     }
     $data = $stmt->fetchAll();
-
 ?>
+    <button id="darkToggle" title="Přepnout tmavý/světlý režim">🌙</button>
     <header>
         <img src="logo_dunder_mifflin.png" alt="logo">
-
-            <a href="index.php">Prodeje</a>
-            <a href="vyrobky.php">Výrobky</a>
-            <a href="employees.php">Zaměstnanci</a>
-            <a href="statistika.php">Statistiky</a>
+        <a href="index.php">Prodeje</a>
+        <a href="vyrobky.php">Výrobky</a>
+        <a href="employees.php">Zaměstnanci</a>
+        <a href="statistika.php">Statistiky</a>
     </header>
     <section>
-        <h1>PRODEJE</h1>
-        <form class='hledat' action="" method="get">
-        <input class='inputsearch' type="text" name="search">
-        <input class='search'type="submit" value="Vyhledat">
+        <h1>PRODEJE <span class="record-count" id="recordCount"></span></h1>
+        <form class="hledat" action="" method="get">
+            <input class="inputsearch" id="liveSearch" type="text" name="search"
+                   value="<?= htmlspecialchars($search) ?>" placeholder="Hledat…">
+            <input class="search" type="submit" value="Vyhledat">
         </form>
         <table>
             <thead>
                 <tr>
-                    <th>ID objednávky</th>
-                    <th>Prodejce</th>
-                    <th>Výrobek</th>
-                    <th>Množství</th>
-                    <th>Datum</th>
-                    <th>Cena</th>
-                    <th>Sleva</th>
+                    <th data-sort>ID objednávky</th>
+                    <th data-sort>Prodejce</th>
+                    <th data-sort>Výrobek</th>
+                    <th data-sort>Množství</th>
+                    <th data-sort>Datum</th>
+                    <th data-sort>Cena</th>
+                    <th data-sort>Sleva</th>
                     <th>Detail</th>
                 </tr>
             </thead>
             <tbody>
-
-            <?php foreach ($data as $key => $value):?>
+            <?php foreach ($data as $value): ?>
                 <tr>
-                    <td> <?= $value['id'] ?></td>
-                    <td><?= $value['Name'],' ', $value['Surname'] ?></td>
-                    <td><?= $value['ProductName'] ?></td>
-                    <td><?= $value['Quantity'] ?></td>            
+                    <td><?= $value['id'] ?></td>
+                    <td><?= htmlspecialchars($value['Name'] . ' ' . $value['Surname']) ?></td>
+                    <td><?= htmlspecialchars($value['ProductName']) ?></td>
+                    <td><?= $value['Quantity'] ?></td>
                     <td><?= $value['Date'] ?></td>
-                    <?php if ($value['Sale'] == 1):?>
-                        <?php $final = ($value['Quantity'] * $value['Price'])*0.9?>
-                        <td><?= $final?></td>
+                    <?php if ($value['Sale'] == 1): ?>
+                        <td><?= round($value['Quantity'] * $value['Price'] * 0.9, 2) ?></td>
                         <td>Ano</td>
-                    <?php endif;?>
-                    <?php if ($value['Sale'] != 1):?>
-                        <?php $final = $value['Quantity'] * $value['Price']?>
-                        <td><?=$final ?></td>
+                    <?php else: ?>
+                        <td><?= round($value['Quantity'] * $value['Price'], 2) ?></td>
                         <td>Ne</td>
-                    <?php endif;?>    
+                    <?php endif; ?>
                     <td><a href="DetailSales.php?id=<?= $value['id'] ?>" class="detail">Detail</a></td>
                 </tr>
-            <?php endforeach;?>
+            <?php endforeach; ?>
             </tbody>
         </table>
-        <a class ='button'href="DetailSales.php">VYTVOŘIT PRODEJ</a>
+        <p id="noResults">Žádné výsledky nenalezeny.</p>
+        <a class="button" href="DetailSales.php">VYTVOŘIT PRODEJ</a>
     </section>
+    <div id="toast"></div>
+    <script src="script.js"></script>
 </body>
-<?php 
-?>
 </html>

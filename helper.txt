@@ -1,4 +1,0 @@
-https://stackoverflow.com/questions/12235595/find-most-frequent-value-in-sql-column
-https://www.google.com/search?client=firefox-b-d&q=sql+how+to+filter+data+from+last+7+day#mmc=1
-https://stackoverflow.com/questions/27599557/how-to-get-last-7-days-data-from-current-datetime-to-last-7-days-in-sql-server
-https://ubiq.co/database-blog/get-records-last-7-days-mysql/
